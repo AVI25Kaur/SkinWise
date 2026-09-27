@@ -1,11 +1,11 @@
 @echo off
-title SkinWise Complete Launcher (MySQL)
+title SkinWise Complete Launcher (PostgreSQL)
 echo ===================================================
-echo   Launching SkinWise (Frontend + Backend + MySQL)
+echo   Launching SkinWise (Frontend + Backend + PostgreSQL)
 echo ===================================================
 
 :: 1. Launch Backend in a dedicated terminal window
-start "SkinWise Backend (MySQL)" cmd /k "%~dp0start-backend.bat"
+start "SkinWise Backend (PostgreSQL)" cmd /k "%~dp0start-backend.bat"
 
 :: 2. Wait 2 seconds for backend to initialize
 timeout /t 2 /nobreak >nul

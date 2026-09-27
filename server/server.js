@@ -29,25 +29,25 @@ app.get("/api/health", async (req, res) => {
     res.json({
       status: "ok",
       app: "SkinWise Backend API",
-      database: "MySQL connected",
+      database: "PostgreSQL connected",
     });
   } catch (err) {
     res.status(503).json({
       status: "degraded",
       app: "SkinWise Backend API",
-      database: "MySQL disconnected: " + err.message,
+      database: "PostgreSQL disconnected: " + err.message,
     });
   }
 });
 
-// Initialize MySQL database/tables and start HTTP server
+// Initialize PostgreSQL database/tables and start HTTP server
 const startServer = async () => {
   try {
-    console.log("Initializing MySQL database & tables...");
+    console.log("Initializing PostgreSQL database & tables...");
     const initResult = await initDb();
     if (!initResult.success) {
-      console.warn("MySQL auto-initialization notice:", initResult.error);
-      console.log("Please ensure MySQL is running on port 3306 and credentials in server/.env are correct.");
+      console.warn("PostgreSQL initialization notice:", initResult.error);
+      console.log("Please ensure PostgreSQL credentials or DATABASE_URL in server/.env are correct.");
     }
 
     app.listen(PORT, "0.0.0.0", () => {

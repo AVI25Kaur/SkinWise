@@ -9,7 +9,7 @@ const getJwtSecret = () => process.env.JWT_SECRET || "skinwise_dev_secret_key_20
 const getJwtExpiresIn = () => process.env.JWT_EXPIRES_IN || "7d";
 
 // @route   POST /api/auth/signup
-// @desc    Register a new user in MySQL
+// @desc    Register a new user in PostgreSQL
 // @access  Public
 router.post("/signup", async (req, res) => {
   try {
@@ -61,7 +61,7 @@ router.post("/signup", async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const password_hash = await bcrypt.hash(password, salt);
 
-    // 4. Save to MySQL users table
+    // 4. Save to PostgreSQL users table
     const newUser = await User.create({
       name: name.trim(),
       email: normalizedEmail,
@@ -88,26 +88,38 @@ router.post("/signup", async (req, res) => {
   } catch (error) {
     console.error("Signup error:", error);
 
-    // Handle MySQL duplicate entry error
-    if (error.code === "ER_DUP_ENTRY") {
+    // Handle PostgreSQL duplicate key (unique violation) error
+    if (error.code === "23505" || (error.message && error.message.includes("duplicate key"))) {
       return res.status(400).json({
         success: false,
         message: "An account with this email already exists. Please log in.",
       });
     }
 
-    // Handle database connection refusal
-    if (error.code === "ECONNREFUSED" || error.code === "PROTOCOL_CONNECTION_LOST") {
+    // Handle database connection issues
+    if (
+      error.code === "ECONNREFUSED" ||
+      error.code === "ENOTFOUND" ||
+      error.code === "ETIMEDOUT" ||
+      error.code === "PROTOCOL_CONNECTION_LOST"
+    ) {
       return res.status(503).json({
         success: false,
-        message: "MySQL database connection error. Please ensure the MySQL service is running on port 3306.",
+        message: "PostgreSQL database connection error. Please ensure PostgreSQL or cloud database is accessible.",
       });
     }
 
-    if (error.code === "ER_ACCESS_DENIED_ERROR") {
+    if (error.code === "28P01" || error.code === "28000") {
       return res.status(503).json({
         success: false,
-        message: "MySQL authentication error: Access denied. Please check DB_USER and DB_PASSWORD in server/.env.",
+        message: "PostgreSQL authentication error: Access denied. Please check DB_USER, DB_PASSWORD, or DATABASE_URL in server/.env.",
+      });
+    }
+
+    if (error.code === "3D000") {
+      return res.status(503).json({
+        success: false,
+        message: `PostgreSQL database '${process.env.DB_NAME || "skinwise"}' does not exist. Please verify your database configuration.`,
       });
     }
 
@@ -119,7 +131,7 @@ router.post("/signup", async (req, res) => {
 });
 
 // @route   POST /api/auth/login
-// @desc    Authenticate user against MySQL and get JWT token
+// @desc    Authenticate user against PostgreSQL and get JWT token
 // @access  Public
 router.post("/login", async (req, res) => {
   try {
@@ -134,7 +146,7 @@ router.post("/login", async (req, res) => {
 
     const normalizedEmail = email.trim().toLowerCase();
 
-    // 1. Look up user by email in MySQL
+    // 1. Look up user by email in PostgreSQL
     const user = await User.findByEmail(normalizedEmail);
     if (!user) {
       return res.status(400).json({
@@ -172,17 +184,22 @@ router.post("/login", async (req, res) => {
   } catch (error) {
     console.error("Login error:", error);
 
-    if (error.code === "ECONNREFUSED" || error.code === "PROTOCOL_CONNECTION_LOST") {
+    if (
+      error.code === "ECONNREFUSED" ||
+      error.code === "ENOTFOUND" ||
+      error.code === "ETIMEDOUT" ||
+      error.code === "PROTOCOL_CONNECTION_LOST"
+    ) {
       return res.status(503).json({
         success: false,
-        message: "MySQL database connection error. Please ensure MySQL is running on port 3306.",
+        message: "PostgreSQL database connection error. Please ensure PostgreSQL or cloud database is accessible.",
       });
     }
 
-    if (error.code === "ER_ACCESS_DENIED_ERROR") {
+    if (error.code === "28P01" || error.code === "28000") {
       return res.status(503).json({
         success: false,
-        message: "MySQL authentication error: Access denied. Please check DB_USER and DB_PASSWORD in server/.env.",
+        message: "PostgreSQL authentication error: Access denied. Please check DB_USER, DB_PASSWORD, or DATABASE_URL in server/.env.",
       });
     }
 
@@ -194,7 +211,7 @@ router.post("/login", async (req, res) => {
 });
 
 // @route   GET /api/auth/me
-// @desc    Get currently logged-in user profile from MySQL
+// @desc    Get currently logged-in user profile from PostgreSQL
 // @access  Private
 router.get("/me", authMiddleware, async (req, res) => {
   try {
