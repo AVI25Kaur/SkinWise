@@ -1,0 +1,652 @@
+/* SkinWise About Us Page Styles */
+
+.about-page {
+  width: 100%;
+  animation: aboutFadeIn 0.35s ease-out;
+  color: #1e293b;
+}
+
+@keyframes aboutFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Common Section Badges */
+.about-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(255, 46, 99, 0.08);
+  color: #ff2e63;
+  padding: 0.4rem 0.95rem;
+  border-radius: 30px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-bottom: 1.15rem;
+}
+
+.about-tag.light {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.section-label {
+  display: inline-block;
+  color: #ff2e63;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.75rem;
+}
+
+/* ===================================================
+   1. HERO SECTION
+   =================================================== */
+.about-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3.5rem;
+  padding: 1.5rem 0 3.5rem;
+}
+
+.about-hero-content {
+  flex: 1.15;
+}
+
+.about-hero-content h1 {
+  font-size: 2.85rem;
+  font-weight: 700;
+  line-height: 1.22;
+  color: #0f172a;
+  margin-bottom: 1.35rem;
+}
+
+.about-hero-content h1 .highlight-text {
+  color: #ff2e63;
+}
+
+.about-hero-content p {
+  font-size: 1.12rem;
+  line-height: 1.75;
+  color: #475569;
+  max-width: 620px;
+  margin-bottom: 1.75rem;
+}
+
+.about-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.about-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #ff2e63;
+  color: #ffffff !important;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.85rem 1.8rem;
+  border-radius: 30px;
+  box-shadow: 0 4px 16px rgba(255, 46, 99, 0.3);
+  transition: all 0.25s ease;
+}
+
+.about-btn-primary:hover {
+  background-color: #e62054;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(255, 46, 99, 0.4);
+}
+
+.about-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #ffffff;
+  color: #334155 !important;
+  border: 1.5px solid #cbd5e1;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.8rem 1.6rem;
+  border-radius: 30px;
+  transition: all 0.25s ease;
+}
+
+.about-btn-secondary:hover {
+  border-color: #ff2e63;
+  color: #ff2e63 !important;
+  transform: translateY(-2px);
+}
+
+/* Hero Supporting Image Card */
+.about-hero-graphic-wrap {
+  flex: 0.9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.about-hero-card {
+  width: 100%;
+  max-width: 420px;
+  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+  border: 1.5px solid #e2e8f0;
+  border-radius: 24px;
+  padding: 1.25rem;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.06);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.about-hero-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 46, 99, 0.25);
+  box-shadow: 0 16px 40px rgba(255, 46, 99, 0.12);
+}
+
+.about-hero-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #ff2e63, #9181f2, #5efc9e);
+  z-index: 1;
+}
+
+.about-hero-image {
+  width: 100%;
+  height: auto;
+  max-height: 430px;
+  object-fit: contain;
+  display: block;
+  border-radius: 16px;
+  filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.08));
+  transition: transform 0.3s ease;
+}
+
+.about-hero-card:hover .about-hero-image {
+  transform: scale(1.02);
+}
+
+/* ===================================================
+   2. OUR MISSION SECTION
+   =================================================== */
+.about-section {
+  padding: 4rem 0;
+  border-top: 1px solid #eef2f6;
+}
+
+.mission-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 3.5rem;
+  align-items: start;
+  margin-top: 1rem;
+}
+
+.mission-heading-col h2 {
+  font-size: 2.2rem;
+  line-height: 1.3;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 1.5rem;
+}
+
+.mission-callout {
+  background: #f8fafc;
+  border-left: 4px solid #ff2e63;
+  border-radius: 0 16px 16px 0;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.mission-callout i {
+  color: #ff2e63;
+  font-size: 1.25rem;
+  margin-top: 0.2rem;
+}
+
+.mission-callout p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #334155;
+  font-weight: 600;
+  margin: 0;
+}
+
+.mission-text-col p {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: #475569;
+  margin-bottom: 1.25rem;
+}
+
+.mission-text-col p:last-child {
+  margin-bottom: 0;
+}
+
+.mission-pillars {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 1.75rem;
+}
+
+.mission-pillar-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1rem 1.15rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.mission-pillar-card i {
+  color: #ff2e63;
+  font-size: 1.1rem;
+}
+
+.mission-pillar-card span {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+/* ===================================================
+   3. WHAT WE OFFER SECTION
+   =================================================== */
+.about-features {
+  background: transparent;
+}
+
+.features-header {
+  max-width: 680px;
+  margin-bottom: 2.75rem;
+}
+
+.features-header h2 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.65rem;
+}
+
+.features-header p {
+  font-size: 1.05rem;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.feature-card {
+  background: #ffffff;
+  border: 1.5px solid #f1f5f9;
+  border-radius: 20px;
+  padding: 2.25rem 1.85rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.feature-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(255, 46, 99, 0.25);
+  box-shadow: 0 14px 30px rgba(255, 46, 99, 0.1);
+}
+
+.feature-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.feature-icon-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: rgba(255, 46, 99, 0.08);
+  color: #ff2e63;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  transition: all 0.25s ease;
+}
+
+.feature-card:hover .feature-icon-wrap {
+  background: #ff2e63;
+  color: #ffffff;
+}
+
+.feature-number {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #cbd5e1;
+  letter-spacing: 0.5px;
+}
+
+.feature-card h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.75rem;
+}
+
+.feature-card p {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: #64748b;
+  margin: 0;
+  flex: 1;
+}
+
+/* ===================================================
+   4. WHY SKINWISE SECTION
+   =================================================== */
+.about-highlight {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  border-radius: 24px;
+  padding: 3.5rem 3rem;
+  color: #ffffff;
+  margin: 1rem 0 3.5rem;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18);
+  position: relative;
+  overflow: hidden;
+}
+
+.about-highlight::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(255, 46, 99, 0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.why-header {
+  max-width: 650px;
+  margin-bottom: 2.25rem;
+}
+
+.why-header h2 {
+  font-size: 2.2rem;
+  line-height: 1.25;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+.why-lead-desc {
+  font-size: 1.08rem;
+  line-height: 1.75;
+  color: #cbd5e1;
+  margin: 0;
+}
+
+.why-pills-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.why-pill-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 1.5rem 1.35rem;
+  transition: all 0.25s ease;
+}
+
+.why-pill-card:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 46, 99, 0.5);
+  transform: translateY(-3px);
+}
+
+.why-pill-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: rgba(255, 46, 99, 0.2);
+  color: #ff2e63;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  margin-bottom: 0.9rem;
+}
+
+.why-pill-card h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.4rem;
+}
+
+.why-pill-card p {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* ===================================================
+   5. IMPORTANT NOTE / DISCLAIMER
+   =================================================== */
+.about-disclaimer {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-left: 5px solid #ff2e63;
+  border-radius: 18px;
+  padding: 2rem 2.25rem;
+  margin-bottom: 3.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.02);
+}
+
+.disclaimer-icon-wrap {
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
+  background: rgba(255, 46, 99, 0.1);
+  color: #ff2e63;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+}
+
+.disclaimer-content h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+}
+
+.disclaimer-content p {
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: #475569;
+  margin: 0;
+}
+
+/* ===================================================
+   6. BOTTOM NAVIGATION CALL TO ACTION
+   =================================================== */
+.about-cta-card {
+  text-align: center;
+  padding: 3.5rem 2rem;
+  background: #ffffff;
+  border: 1.5px solid #f1f5f9;
+  border-radius: 24px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.03);
+  margin-bottom: 2rem;
+}
+
+.about-cta-card h2 {
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.75rem;
+}
+
+.about-cta-card p {
+  font-size: 1.05rem;
+  color: #64748b;
+  max-width: 550px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+}
+
+.about-cta-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* ===================================================
+   RESPONSIVENESS (Desktop, Tablet, Mobile)
+   =================================================== */
+@media screen and (max-width: 992px) {
+  .about-hero {
+    flex-direction: column;
+    text-align: center;
+    gap: 2.5rem;
+    padding: 1rem 0 3rem;
+  }
+
+  .about-hero-content p {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .about-hero-actions {
+    justify-content: center;
+  }
+
+  .about-hero-graphic-wrap {
+    width: 100%;
+  }
+
+  .about-hero-card {
+    max-width: 380px;
+    margin: 0 auto;
+  }
+
+  .mission-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .feature-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .why-pills-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .about-hero-content h1 {
+    font-size: 2.3rem;
+  }
+
+  .features-header h2,
+  .mission-heading-col h2,
+  .why-header h2,
+  .about-cta-card h2 {
+    font-size: 1.85rem;
+  }
+
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mission-pillars {
+    grid-template-columns: 1fr;
+  }
+
+  .about-highlight {
+    padding: 2.5rem 1.75rem;
+  }
+
+  .about-disclaimer {
+    flex-direction: column;
+    padding: 1.75rem 1.5rem;
+  }
+
+  .disclaimer-icon-wrap {
+    margin-bottom: 0.5rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .about-hero-content h1 {
+    font-size: 2rem;
+  }
+
+  .about-hero-content p {
+    font-size: 1rem;
+  }
+
+  .about-hero-card {
+    padding: 0.75rem;
+    max-width: 320px;
+  }
+
+  .about-hero-image {
+    max-height: 320px;
+  }
+
+  .about-btn-primary,
+  .about-btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+}
