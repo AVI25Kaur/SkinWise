@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 
 const AuthContext = createContext(null);
 
-const DEFAULT_API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+const DEFAULT_API_URL = process.env.REACT_APP_API_URL || "https://skinwise-backend.onrender.com/api";
 const TOKEN_KEY = "skinwise_auth_token";
 
 // Resilient fetch helper that handles both localhost and 127.0.0.1 on Windows
