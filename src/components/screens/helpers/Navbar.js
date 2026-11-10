@@ -47,8 +47,17 @@ const Navbar = () => {
               <Link to="/info">Skin Cancer Information</Link>
             </div>
 
+<<<<<<< HEAD
             <div className="link" onClick={toggle}>
               <Link to="/get-tested">Skin Health Questionnaire</Link>
+=======
+            {/* <div className="link" onClick={toggle}>
+              <Link to="/get-tested">Skin Health Questionnaire</Link>
+            </div> */}
+
+            <div className="link" onClick={toggle}>
+              <Link to="/ai-skin-check">AI Skin Check</Link>
+>>>>>>> aefe4eb6 (Initial SkinWise project upload)
             </div>
 
             <div className="link" onClick={toggle}>

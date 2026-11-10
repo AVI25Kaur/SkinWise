@@ -1,0 +1,25 @@
+{
+  "labels": [
+    "akiec",
+    "bcc",
+    "bkl",
+    "df",
+    "mel",
+    "nv",
+    "vasc"
+  ],
+  "class_names": {
+    "akiec": "Actinic keratoses / intraepithelial carcinoma",
+    "bcc": "Basal cell carcinoma",
+    "bkl": "Benign keratosis-like lesions",
+    "df": "Dermatofibroma",
+    "mel": "Melanoma",
+    "nv": "Melanocytic nevi",
+    "vasc": "Vascular lesions"
+  },
+  "image_size": [
+    224,
+    224
+  ],
+  "dataset": "HAM10000"
+}

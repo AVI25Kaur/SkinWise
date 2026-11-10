@@ -1,8 +1,22 @@
 node_modules/
 build/
+<<<<<<< HEAD
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 server/.env
+=======
+.venv-ml/
+venv/
+.venv/
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+
+HAM10000_images_part_1/
+HAM10000_images_part_2/
+>>>>>>> aefe4eb6 (Initial SkinWise project upload)

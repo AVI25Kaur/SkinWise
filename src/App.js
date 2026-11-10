@@ -13,11 +13,19 @@ import { diseaseData } from "./components/screens/disease-info/disease/diseaseDa
 import DiseaseInfoFrame from "./components/screens/disease-info/disease/DiseaseInfoFrame";
 import AllInfo from "./components/screens/AllInfo";
 import FindDermatologist from "./components/screens/findDerma/FindDermatologist";
+<<<<<<< HEAD
 import GetTested from "./components/screens/getTesed/GetTested";
+=======
+// import GetTested from "./components/screens/getTesed/GetTested";
+>>>>>>> aefe4eb6 (Initial SkinWise project upload)
 import Blog from "./components/screens/blog/Blog";
 import BlogPost from "./components/screens/blog/BlogPost";
 import Login from "./components/screens/auth/Login";
 import Signup from "./components/screens/auth/Signup";
+<<<<<<< HEAD
+=======
+import SkinAI from "./components/screens/SkinAI";
+>>>>>>> aefe4eb6 (Initial SkinWise project upload)
 
 function App() {
   return (
@@ -38,7 +46,12 @@ function App() {
               <ProtectedRoute exact path="/info" component={AllInfo} />
               <ProtectedRoute exact path="/blog" component={Blog} />
               <ProtectedRoute exact path="/blog/:id" component={BlogPost} />
+<<<<<<< HEAD
               <ProtectedRoute exact path="/get-tested" component={GetTested} />
+=======
+              {/* <ProtectedRoute exact path="/get-tested" component={GetTested} /> */}
+              <ProtectedRoute exact path="/ai-skin-check" component={SkinAI} />
+>>>>>>> aefe4eb6 (Initial SkinWise project upload)
               <ProtectedRoute
                 exact
                 path="/find-a-dermatologist"

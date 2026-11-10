@@ -157,3 +157,13 @@ Project Link: [https://github.com/kiraproject/kira-skin-cancer](https://github.c
 - [Skin cancer Information - http://skincancer.org/](http://skincancer.org/)
 - [GitHub](https://github.com)
 - [Font Awesome](https://fontawesome.com)
+<<<<<<< HEAD
+=======
+
+## AI Skin Image Review (HAM10000)
+
+The project includes an experimental AI Skin Check page at `/ai-skin-check`, with image upload, top-three model outputs, a ten-item skin-health questionnaire, warning-sign guidance, and dermatologist follow-up. The classifier training pipeline uses the real HAM10000 dataset; the dataset and trained weights are **not bundled** because the dataset is large and has separate access/usage terms. See [`ml-service/README.md`](ml-service/README.md) for dataset download, training, and API setup.
+
+**Medical safety:** This is an educational prototype, not a diagnostic device. Model confidence is not the probability of cancer. It cannot rule out cancer or recommend a personalized cure. Concerning or changing lesions should be assessed by a qualified clinician. Do not delay care based on an app result.
+>>>>>>> aefe4eb6 (Initial SkinWise project upload)
+"# Skinwise" 

@@ -19,9 +19,15 @@ const Home = () => {
           </p>
 
           <div className="btns">
+<<<<<<< HEAD
             <Link to="/get-tested">
               <div className="btn1">
                 <h3>Start Questionnaire</h3>
+=======
+            <Link to="/ai-skin-check">
+              <div className="btn2">
+                <h3>AI Skin Check</h3>
+>>>>>>> aefe4eb6 (Initial SkinWise project upload)
               </div>
             </Link>
 
