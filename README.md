@@ -1,169 +1,376 @@
-<!-- PROJECT LOGO -->
-<br />
+# SkinWise AI – Skin Health Awareness & AI-Powered Skin Analysis
+
 <p align="center">
-  <a href="https://github.com/kiraproject/kira-skin-cancer/tree/main/public">
-    <img src="https://raw.githubusercontent.com/kiraproject/kira-skin-cancer/main/public/kira-skin-cancer.png" alt="Logo" width="80" height="80">
-  </a>
-
-  <h3 align="center">KIRA Skin Cancer Project</h3>
-
-  <p align="center">
-  KIRA Skin cancer is a React web app for the betterment of the Skin Cancer society!
-    <br />
-    <a href="https://github.com/kiraproject/kira-skin-cancer"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://kira-skin-cancer.netlify.app/">View Demo</a>
-    ·
-    <a href="https://github.com/kiraproject/kira-skin-cancer/tree/main/public">Report Bug</a>
-    ·
-    <a href="https://github.com/kiraproject/kira-skin-cancer/tree/main/public">Request Feature</a>
-  </p>
+  <strong>Making Skin Health Awareness Smarter, Simpler, and More Accessible.</strong>
 </p>
 
-<!-- TABLE OF CONTENTS -->
+SkinWise AI is a web-based skin health awareness platform designed to help users understand common skin conditions, learn about skin cancer, identify potential warning signs, and access dermatologist information. It also includes an experimental AI-powered skin image classification feature using a deep learning model trained on the HAM10000 dataset.
 
-## Table of Contents
+## 🌟 Key Features
 
-- [About the Project](#about-the-project)
-  - [Built With](#built-with)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
-- [Acknowledgements](#acknowledgements)
+### 1. User Authentication
+- User registration and login.
+- Secure password hashing using bcrypt.
+- JWT-based authentication.
+- Protected application routes.
 
-<!-- ABOUT THE PROJECT -->
+### 2. Skin Health Information
+- Educational information about different types of skin cancer.
+- Information about common skin diseases.
+- Symptoms, warning signs, and risk factors.
+- General skin health and prevention guidance.
 
-## About The Project
+### 3. AI-Powered Skin Image Analysis
+- Upload skin lesion images for experimental classification.
+- Deep learning model based on EfficientNetB0.
+- Trained using the HAM10000 dataset.
+- Displays the top three predicted categories with confidence scores.
+- Supports JPG, PNG, and WEBP image uploads.
 
-![Image of KIRA Skin cancer Home Page](https://raw.githubusercontent.com/kiraproject/kira-skin-cancer/main/Additional%20fIles/Images/homepage-ss.png)
+### 4. Skin Health Questionnaire
+- Ten-question skin health screening flow.
+- Questions related to skin changes and warning signs.
+- Provides general awareness and guidance.
+- Encourages professional medical consultation when appropriate.
 
-#### KIRA Skin cancer is a React web app for the betterment of the Skin Cancer society.
+### 5. Find a Dermatologist
+- Dedicated dermatologist-finding section.
+- Helps users explore dermatologist resources.
 
-![Image of Skin cancer Info Page](https://github.com/kiraproject/kira-skin-cancer/blob/main/Additional%20fIles/Images/cancer-info-ss.png?raw=true)
+### 6. Skin Health Blog
+- Educational blog section.
+- Skin health awareness content.
+- Informative articles and user-oriented resources.
 
-##### It also provides the most important information about different skin cancers and skin diseases.
+## 🛠️ Technology Stack
 
-![Image of Skin diseases Info Page](https://github.com/kiraproject/kira-skin-cancer/blob/main/Additional%20fIles/Images/disease-info-ss.png?raw=true)
+| Component | Technologies |
+|---|---|
+| Frontend | React.js, JavaScript, HTML5, CSS3 |
+| Routing | React Router |
+| Backend | Node.js, Express.js |
+| Database | PostgreSQL |
+| Authentication | JWT, bcrypt |
+| Machine Learning | Python, TensorFlow, Keras |
+| Deep Learning Model | EfficientNetB0 |
+| ML API | FastAPI, Uvicorn |
+| Dataset | HAM10000 |
+| Image Processing | Pillow, NumPy |
+| ML Data Processing | Pandas, Scikit-learn |
 
-##### The website also provides the feature to find all dermatologists in India. Users can navigate with finding Dermatologists near them.
+## 🧠 Machine Learning Implementation
 
-![Image of Find a dermatologist Page](https://github.com/kiraproject/kira-skin-cancer/blob/main/Additional%20fIles/Images/find-derma-ss.png?raw=true)
+SkinWise AI integrates an experimental skin lesion classification model trained on the HAM10000 dataset.
 
-##### It also helps to detect the type of cancer or skin disease one has with 82% accurate model implemented with TensorFlow, TensorFlowJs.
+**Dataset:** [HAM10000 – Kaggle](https://www.kaggle.com/datasets/kmader/skin-cancer-mnist-ham10000)
 
-![Image of Skin cancer detection Page](https://github.com/kiraproject/kira-skin-cancer/blob/main/Additional%20fIles/Images/get-tested-ss.png?raw=true)
+The dataset contains 10,015 dermatoscopic images across seven diagnostic categories.
 
-##### KIRA skin cancer campaign also provides KIRA-Blog for sharing thoughts and experiences users have had during their Journey of skin cancer treatment.
+### Classification Categories
 
-![Image of KIRA Blog Home Page](https://github.com/kiraproject/kira-skin-cancer/blob/main/Additional%20fIles/Images/kira-blog-ss.png?raw=true)
+| Label | Category |
+|---|---|
+| AKIEC | Actinic keratoses / intraepithelial carcinoma |
+| BCC | Basal cell carcinoma |
+| BKL | Benign keratosis-like lesions |
+| DF | Dermatofibroma |
+| MEL | Melanoma |
+| NV | Melanocytic nevi |
+| VASC | Vascular lesions |
 
-### Built With
+### Model Workflow
 
-Web App was made by using several Web Technologies, major of then are listed below:
+1. User uploads a skin lesion image.
+2. The image is received by the FastAPI backend.
+3. The image is resized and preprocessed.
+4. EfficientNetB0 processes the image.
+5. The model generates classification scores.
+6. The top three predictions are returned to the frontend.
 
-- React
-- Node
-- Express Js
-- Mongo DB
-- HTML
-- CSS/SCSS
-- JS
-- Cloudinary
+**Note:** Model confidence scores are not probabilities of having cancer and should not be interpreted as diagnostic results.
 
+## 📁 Project Structure
 
-<!-- GETTING STARTED -->
+```text
+SkinWise/
+│
+├── public/
+│
+├── src/
+│   ├── components/
+│   ├── context/
+│   ├── css/
+│   ├── App.js
+│   └── index.js
+│
+├── server/
+│   ├── routes/
+│   ├── .env.example
+│   ├── db.js
+│   ├── server.js
+│   └── package.json
+│
+├── ml-service/
+│   ├── data/
+│   ├── models/
+│   ├── app.py
+│   ├── train.py
+│   ├── requirements.txt
+│   └── README.md
+│
+├── package.json
+├── package-lock.json
+├── start-backend.bat
+├── run-skinwise.bat
+└── README.md
+```
 
-## Getting Started
+## ⚙️ Installation and Setup
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+Follow these steps to run SkinWise AI locally.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
+Install the following:
 
-- Create React App
+- Node.js and npm
+- Python 3.10 or 3.11 (recommended for TensorFlow 2.15.1)
+- PostgreSQL
+- Git
 
-```sh
-npx create-react-app my-app
-cd my-app
-npm start
+### Step 1: Clone the Repository
+
+```bash
+git clone https://github.com/AVI25Kaur/SkinWise.git
+
+cd SkinWise
 ```
 
-- npm
+### Step 2: Install Frontend Dependencies
 
-```sh
-npm install npm@latest -g
-```
-
-### Installation
-
-1. Clone the repo
-
-```sh
-git clone https://github.com/kiraproject/kira-skin-cancer.git
-```
-
-2. Install NPM packages
-
-```sh
+```bash
 npm install
 ```
 
-<!-- USAGE EXAMPLES -->
+### Step 3: Configure the PostgreSQL Backend
 
-## Usage
+Navigate to the server directory:
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+```bash
+cd server
+```
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+Create a copy of `.env.example` named `.env`.
 
-## Contributing
+Configure your PostgreSQL credentials:
 
-Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+```env
+PORT=5000
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=skinwise
+DB_USER=postgres
+DB_PASSWORD=your_postgres_password
+DB_SSL=false
 
-<!-- LICENSE -->
+JWT_SECRET=your_secure_jwt_secret
+JWT_EXPIRES_IN=7d
 
-## License
+CLIENT_ORIGIN=http://localhost:3000
+```
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Create a PostgreSQL database named `skinwise` before starting the backend.
 
-<!-- CONTACT -->
+Install backend dependencies:
 
-## Contact
+```bash
+npm install
+```
 
-Saurabh Bomble - [Portfolio Website](http://saurabhbomble.netlify.app/)
-Aditya Mhaske - [Linkedin](https://www.linkedin.com/in/adityamhaske/)
-Sanket Bhandari - [Linkedin](https://www.linkedin.com/in/sanket-bhandari/)
-Atharv Nikam- [Linkedin](https://www.linkedin.com/in/atharv-nikam-878353192/)
+Start the backend:
 
-Project Link: [https://github.com/kiraproject/kira-skin-cancer](https://github.com/kiraproject/kira-skin-cancer)
+```bash
+npm start
+```
 
-<!-- ACKNOWLEDGEMENTS -->
+The backend runs on:
 
-## Acknowledgements
+`http://localhost:5000`
 
-- [Skin cancer Information - http://skincancer.org/](http://skincancer.org/)
-- [GitHub](https://github.com)
-- [Font Awesome](https://fontawesome.com)
-<<<<<<< HEAD
-=======
+### Step 4: Configure the Machine Learning Service
 
-## AI Skin Image Review (HAM10000)
+Open another terminal:
 
-The project includes an experimental AI Skin Check page at `/ai-skin-check`, with image upload, top-three model outputs, a ten-item skin-health questionnaire, warning-sign guidance, and dermatologist follow-up. The classifier training pipeline uses the real HAM10000 dataset; the dataset and trained weights are **not bundled** because the dataset is large and has separate access/usage terms. See [`ml-service/README.md`](ml-service/README.md) for dataset download, training, and API setup.
+```bash
+cd ml-service
+```
 
-**Medical safety:** This is an educational prototype, not a diagnostic device. Model confidence is not the probability of cancer. It cannot rule out cancer or recommend a personalized cure. Concerning or changing lesions should be assessed by a qualified clinician. Do not delay care based on an app result.
+Create a Python virtual environment:
+
+```bash
+python -m venv .venv
+```
+
+Activate it on Windows:
+
+```bash
+.venv\Scripts\activate
+```
+
+Install dependencies:
+
+```bash
+python -m pip install --upgrade pip
+
+pip install -r requirements.txt
+```
+
+### Step 5: Download the HAM10000 Dataset
+
+Download the dataset from:
+
+https://www.kaggle.com/datasets/kmader/skin-cancer-mnist-ham10000
+
+After extracting it, organize the files as follows:
+
+```text
+ml-service/
+│
+└── data/
+    ├── HAM10000_metadata.csv
+    │
+    └── HAM10000_images/
+        ├── ISIC_0024306.jpg
+        ├── ISIC_0024307.jpg
+        └── ...
+```
+
+Copy all images from both HAM10000 image folders into `HAM10000_images`.
+
+**Important:** The dataset is not included in this GitHub repository because of its large size and separate dataset terms.
+
+### Step 6: Train the AI Model
+
+From inside the `ml-service` directory, run:
+
+```bash
+python train.py
+```
+
+The training script uses EfficientNetB0 transfer learning and saves the trained model and label information inside:
+
+```text
+ml-service/models/
+    skinwise_ham10000.keras
+    labels.json
+```
+
+Training may take some time depending on your system.
+
+### Step 7: Start the ML API
+
+Run:
+
+```bash
+uvicorn app:app --reload --port 8000
+```
+
+The ML API will be available at:
+
+`http://localhost:8000`
+
+API health endpoint:
+
+`http://localhost:8000/health`
+
+Interactive API documentation:
+
+`http://localhost:8000/docs`
+
+### Step 8: Start the React Frontend
+
+Open another terminal in the project root:
+
+```bash
+npm start
+```
+
+The application will open at:
+
+`http://localhost:3000`
+
+You can also use the provided Windows launcher:
+
+```bash
+run-skinwise.bat
+```
+
+This starts the Node.js backend and React frontend. The PostgreSQL database must already be configured. Start the ML service separately when using AI Skin Check.
+
+## 🔗 Important Application Routes
+
+| Route | Description |
+|---|---|
+| `/` | Landing page |
+| `/about` | About SkinWise |
+| `/login` | User login |
+| `/signup` | User registration |
+| `/home` | User dashboard |
+| `/info` | Skin health information |
+| `/get-tested` | Skin health testing information |
+| `/ai-skin-check` | AI skin image analysis |
+| `/find-a-dermatologist` | Find dermatologists |
+| `/blog` | Skin health blog |
+
+Some application routes require user authentication.
+
+## 🔒 Security and Privacy
+
+- Passwords are hashed before storage.
+- JWT authentication is used for protected routes.
+- Database credentials and secrets should be stored in environment variables.
+- Never commit `.env` files or private credentials to GitHub.
+- Keep datasets and generated model weights outside the repository unless intentionally distributed.
+
+## ⚠️ Medical Disclaimer
+
+SkinWise AI is an educational and research-oriented project. Its AI classification feature is experimental and is not clinically validated.
+
+- It does not provide medical diagnoses.
+- It cannot confirm or rule out skin cancer.
+- Model confidence scores should not be treated as medical certainty.
+- The questionnaire is not a validated clinical risk assessment.
+- Users should consult qualified dermatologists or healthcare professionals about new, changing, bleeding, crusting, or non-healing skin lesions.
+
+Never delay medical consultation based on the application's output.
+
+## 🚀 Future Enhancements
+
+- Improve model performance with more diverse and representative datasets.
+- Evaluate the model on independent clinical datasets.
+- Enhance accessibility and mobile responsiveness.
+- Add multilingual skin health awareness resources.
+- Expand dermatologist discovery features.
+- Improve model monitoring and prediction explanations.
+
+## 👩‍💻 Project Repository
+
+**GitHub:** [AVI25Kaur/SkinWise](https://github.com/AVI25Kaur/SkinWise)
+
+## 🙏 Acknowledgements
+
+- [HAM10000 Dataset](https://www.kaggle.com/datasets/kmader/skin-cancer-mnist-ham10000)
+- [TensorFlow](https://www.tensorflow.org/)
+- [React](https://react.dev/)
+- [FastAPI](https://fastapi.tiangolo.com/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Scikit-learn](https://scikit-learn.org/)
+
+---
+
+<p align="center">
+  <strong>SkinWise AI – Promoting Awareness, Encouraging Prevention, and Supporting Better Skin Health.</strong>
+</p>
 >>>>>>> aefe4eb6 (Initial SkinWise project upload)
 "# Skinwise" 
