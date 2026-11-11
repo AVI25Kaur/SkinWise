@@ -4,65 +4,65 @@ var Campground = require("../models/campground");
 var Comment = require("../models/comment");
 var middleware = require("../middleware");
 
-// Comments new
-router.get("/new", middleware.isLoggedIn, function(req, res) {
-  Campground.findById(req.params.id, function(err, campground) {
-    if (err) {
-      console.log(err);
-    } else {
-      res.render("comments/new", { campground: campground });
+router.get(
+  "/new",
+  middleware.isLoggedIn,
+  middleware.asyncHandler(async function(req, res) {
+    var campground = await Campground.findById(req.params.id);
+    if (!campground) {
+      req.flash("error", "Sorry, that campground does not exist!");
+      return res.redirect("/campgrounds");
     }
-  });
-});
+    return res.render("comments/new", { campground: campground });
+  })
+);
 
-// Comments create
-router.post("/", middleware.isLoggedIn, function(req, res) {
-  Campground.findById(req.params.id, function(err, found) {
-    if (err) {
-      console.log(err);
+router.post(
+  "/",
+  middleware.isLoggedIn,
+  middleware.asyncHandler(async function(req, res) {
+    var campground = await Campground.findById(req.params.id);
+    if (!campground) {
+      req.flash("error", "Sorry, that campground does not exist!");
+      return res.redirect("/campgrounds");
     }
-    var ratedArray = [];
-    found.hasRated.forEach(function(rated) {
-      ratedArray.push(String(rated));
-    });
-    if (ratedArray.includes(String(req.user._id))) {
+    if (String(campground.author.id) === String(req.user._id)) {
+      req.flash("error", "You cannot review your own post.");
+      return res.redirect("/campgrounds/" + req.params.id);
+    }
+    if (await Comment.hasUserReviewed(req.params.id, req.user._id)) {
       req.flash(
         "error",
-        "You've already reviewed this campgroud, please edit your review instead."
+        "You've already reviewed this campground, please edit your review instead."
       );
-      res.redirect("/campgrounds/" + req.params.id);
-    } else {
-      Campground.findById(req.params.id, function(err, campground) {
-        if (err) {
-          console.log(err);
-          res.redirect("/campgrounds");
-        } else {
-          var newComment = req.body.comment;
-          Comment.create(newComment, function(err, comment) {
-            if (err) {
-              req.flash("error", "Something went wrong.");
-              res.render("error");
-            } else {
-              // add username and id to comment
-              comment.author.id = req.user._id;
-              comment.author.username = req.user.username;
-              campground.hasRated.push(req.user._id);
-              campground.rateCount = campground.comments.length;
-              // save comment
-              comment.save();
-              campground.comments.push(comment);
-              campground.save();
-              req.flash("success", "Successfully added review!");
-              res.redirect("/campgrounds/" + campground._id);
-            }
-          });
-        }
-      });
+      return res.redirect("/campgrounds/" + req.params.id);
     }
-  });
-});
 
-// COMMENT EDIT ROUTE
+    var comment = req.body.comment || {};
+    var rating = Number(comment.rating);
+    if (!comment.text || !Number.isInteger(rating) || rating < 1 || rating > 5) {
+      req.flash("error", "Enter review text and choose a rating from 1 to 5.");
+      return res.redirect("/campgrounds/" + req.params.id);
+    }
+
+    try {
+      await Comment.create(req.params.id, req.user, {
+        text: comment.text,
+        rating: rating
+      });
+    } catch (error) {
+      if (error.code === "23505") {
+        req.flash("error", "You've already reviewed this campground.");
+        return res.redirect("/campgrounds/" + req.params.id);
+      }
+      throw error;
+    }
+    await Campground.updateRating(req.params.id);
+    req.flash("success", "Successfully added review!");
+    return res.redirect("/campgrounds/" + req.params.id);
+  })
+);
+
 router.get(
   "/:comment_id/edit",
   middleware.isLoggedIn,
@@ -75,55 +75,39 @@ router.get(
   }
 );
 
-// COMMENT UPDATE ROUTE
-router.put("/:comment_id", middleware.checkCommentOwnership, function(
-  req,
-  res
-) {
-  Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, function(
-    err,
-    updatedComment
-  ) {
-    if (err) {
-      res.redirect("back");
-    } else {
-      req.flash("success", "Review updated!");
-      res.redirect("/campgrounds/" + req.params.id);
+router.put(
+  "/:comment_id",
+  middleware.isLoggedIn,
+  middleware.checkCommentOwnership,
+  middleware.asyncHandler(async function(req, res) {
+    var comment = req.body.comment || {};
+    var rating = Number(comment.rating);
+    if (!comment.text || !Number.isInteger(rating) || rating < 1 || rating > 5) {
+      req.flash("error", "Enter review text and choose a rating from 1 to 5.");
+      return res.redirect("/campgrounds/" + req.params.id);
     }
-  });
-});
+    await Comment.update(req.params.comment_id, req.user, {
+      text: comment.text,
+      rating: rating
+    });
+    await Campground.updateRating(req.params.id);
+    req.flash("success", "Review updated!");
+    return res.redirect("/campgrounds/" + req.params.id);
+  })
+);
 
-// DESTROY COMMENT ROUTE
-router.delete("/:comment_id", middleware.checkCommentOwnership, function(
-  req,
-  res
-) {
-  Comment.findByIdAndRemove(req.params.comment_id, function(err) {
-    if (err) {
-      res.redirect("back");
-    } else {
-      Campground.findByIdAndUpdate(
-        req.params.id,
-        { $pull: { comments: { $in: [req.params.comment_id] } } },
-        function(err) {
-          if (err) {
-            console.log(err);
-          }
-        }
-      );
-      Campground.findByIdAndUpdate(
-        req.params.id,
-        { $pull: { hasRated: { $in: [req.user._id] } } },
-        function(err) {
-          if (err) {
-            console.log(er);
-          }
-        }
-      );
-      req.flash("success", "Review deleted!");
-      res.redirect("/campgrounds/" + req.params.id);
+router.delete(
+  "/:comment_id",
+  middleware.isLoggedIn,
+  middleware.checkCommentOwnership,
+  middleware.asyncHandler(async function(req, res) {
+    var campgroundId = await Comment.delete(req.params.comment_id);
+    if (campgroundId) {
+      await Campground.updateRating(campgroundId);
     }
-  });
-});
+    req.flash("success", "Review deleted!");
+    return res.redirect("/campgrounds/" + req.params.id);
+  })
+);
 
 module.exports = router;

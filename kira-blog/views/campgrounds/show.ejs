@@ -46,7 +46,7 @@
                 <%= moment(campground.createdAt).format('LL') %>
               </span>
               </p>
-              <% if(currentUser && campground.author.id.equals(currentUser._id)) { %>
+              <% if(currentUser && String(campground.author.id) === String(currentUser._id)) { %>
                 <form id="deleteForm" action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST" class="float-right">
                   <button class="delBtn btn text-dark btn-lg">
                   <i class="fas fa-trash-alt"></i>
@@ -60,7 +60,7 @@
           </div>
           <div class="card shadow-sm mt-4" id="comments">
             <ul class="list-group list-group-flush">
-              <% if(currentUser && campground.author.id.equals(currentUser._id)) { %>
+              <% if(currentUser && String(campground.author.id) === String(currentUser._id)) { %>
                 <li id="commentItem" class="list-group-item list-group-item-light">
                   Your campground has
                   <% if (campground.comments.length === 0) { %>
@@ -137,7 +137,7 @@
                         <span class="text-muted">
                   <%- comment.text %>
                 </span>
-                        <% if(currentUser && comment.author.id.equals(currentUser._id)) { %>
+                        <% if(currentUser && String(comment.author.id) === String(currentUser._id)) { %>
                           <div class="float-right">
                             <a class="btn text-dark" data-toggle="collapse" data-target="#editComment" aria-expanded="false" aria-controls="editComment">
                       <i class="fas fa-pencil-alt"></i>
