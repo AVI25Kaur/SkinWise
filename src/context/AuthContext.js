@@ -1,39 +1,44 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback
+} from "react";
 
 const AuthContext = createContext(null);
 
-<<<<<<< HEAD
-const DEFAULT_API_URL = process.env.REACT_APP_API_URL || "https://skinwise-backend.onrender.com/api";
-=======
 const DEFAULT_API_URL =
   process.env.REACT_APP_API_URL ||
   (process.env.NODE_ENV === "development"
     ? `http://${window.location.hostname}:5000/api`
     : "https://skinwise-backend.onrender.com/api");
->>>>>>> aefe4eb6 (Initial SkinWise project upload)
+
 const TOKEN_KEY = "skinwise_auth_token";
 
-// Resilient fetch helper that handles both localhost and 127.0.0.1 on Windows
+// Resilient backend fetch helper
 const apiFetch = async (endpoint, options = {}) => {
   const baseUrls = [
     DEFAULT_API_URL,
     DEFAULT_API_URL.includes("localhost")
       ? DEFAULT_API_URL.replace("localhost", "127.0.0.1")
-      : DEFAULT_API_URL.replace("127.0.0.1", "localhost"),
+      : DEFAULT_API_URL.replace("127.0.0.1", "localhost")
   ];
 
   let lastError = null;
-  for (const url of baseUrls) {
+
+  for (const url of [...new Set(baseUrls)]) {
     try {
-      const res = await fetch(`${url}${endpoint}`, options);
-      return res;
+      return await fetch(`${url}${endpoint}`, options);
     } catch (err) {
       lastError = err;
     }
   }
 
   throw new Error(
-    "Unable to connect to the backend authentication server (port 5000). Please ensure the backend server is running."
+    lastError?.message ||
+    "Unable to connect to the authentication server. Please check your backend URL."
   );
 };
 
@@ -44,15 +49,15 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [authError, setAuthError] = useState(null);
 
-  // Check and restore existing session from storage on boot
+  // Restore an existing session
   const loadUserFromToken = useCallback(async (existingToken) => {
     try {
       const response = await apiFetch("/auth/me", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${existingToken}`,
-        },
+          Authorization: `Bearer ${existingToken}`
+        }
       });
 
       if (!response.ok) {
@@ -60,6 +65,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       const data = await response.json();
+
       if (data.success && data.user) {
         setUser(data.user);
         setToken(existingToken);
@@ -70,6 +76,7 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (err) {
       console.warn("Unable to restore session:", err.message);
+
       localStorage.removeItem(TOKEN_KEY);
       setUser(null);
       setToken(null);
@@ -81,6 +88,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const savedToken = localStorage.getItem(TOKEN_KEY);
+
     if (savedToken) {
       loadUserFromToken(savedToken);
     } else {
@@ -88,24 +96,28 @@ export const AuthProvider = ({ children }) => {
     }
   }, [loadUserFromToken]);
 
-  // Signup method
+  // Signup
   const signup = async (name, email, password, confirmPassword) => {
     setAuthError(null);
+
     try {
       const response = await apiFetch("/auth/signup", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
-        body: JSON.stringify({ name, email, password, confirmPassword }),
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+          confirmPassword
+        })
       });
 
       const data = await response.json();
 
       if (!response.ok || !data.success) {
-        const errorMsg = data.message || "Failed to create account.";
-        setAuthError(errorMsg);
-        throw new Error(errorMsg);
+        throw new Error(data.message || "Failed to create account.");
       }
 
       if (data.token) {
@@ -113,7 +125,6 @@ export const AuthProvider = ({ children }) => {
         setToken(data.token);
         setUser(data.user);
         setIsAuthenticated(true);
-        setAuthError(null);
       }
 
       return data;
@@ -123,24 +134,23 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Login method
+  // Login
   const login = async (email, password) => {
     setAuthError(null);
+
     try {
       const response = await apiFetch("/auth/login", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password })
       });
 
       const data = await response.json();
 
       if (!response.ok || !data.success) {
-        const errorMsg = data.message || "Invalid email or password.";
-        setAuthError(errorMsg);
-        throw new Error(errorMsg);
+        throw new Error(data.message || "Invalid email or password.");
       }
 
       if (data.token) {
@@ -148,7 +158,6 @@ export const AuthProvider = ({ children }) => {
         setToken(data.token);
         setUser(data.user);
         setIsAuthenticated(true);
-        setAuthError(null);
       }
 
       return data;
@@ -158,7 +167,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Logout method
+  // Logout
   const logout = () => {
     localStorage.removeItem(TOKEN_KEY);
     setUser(null);
@@ -175,17 +184,23 @@ export const AuthProvider = ({ children }) => {
     authError,
     signup,
     login,
-    logout,
+    logout
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
+
   if (!context) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
+
   return context;
 };
 

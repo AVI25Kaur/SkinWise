@@ -1,25 +1,29 @@
+
 import React, { useRef } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 
 const Navbar = () => {
-  let nav = useRef(null);
-  let navToggle = useRef(null);
-  let navId = useRef(null);
+  const nav = useRef(null);
+  const navToggle = useRef(null);
+  const navId = useRef(null);
+
   const history = useHistory();
   const { isAuthenticated, user, logout } = useAuth();
 
   const toggle = () => {
-    if (navToggle && navToggle.classList) navToggle.classList.toggle("expanded");
-    if (nav && nav.classList) nav.classList.toggle("expanded");
-    if (navId && navId.classList) navId.classList.toggle("expanded");
+    navToggle.current?.classList.toggle("expanded");
+    nav.current?.classList.toggle("expanded");
+    navId.current?.classList.toggle("expanded");
   };
 
   const handleLogout = () => {
     logout();
-    if (navToggle && navToggle.classList && navToggle.classList.contains("expanded")) {
+
+    if (navToggle.current?.classList.contains("expanded")) {
       toggle();
     }
+
     history.push("/");
   };
 
@@ -31,37 +35,33 @@ const Navbar = () => {
         </Link>
       </div>
 
-      <div className="nav-toggle" ref={(ele) => (nav = ele)}>
+      <div className="nav-toggle" ref={nav}>
         <div
           className="nav-toggle-bar"
-          ref={(ele) => (navToggle = ele)}
+          ref={navToggle}
           onClick={toggle}
         ></div>
       </div>
 
-      <div id="nav" className="links" ref={(ele) => (navId = ele)}>
+      <div id="nav" className="links" ref={navId}>
         {isAuthenticated ? (
           <>
-
             <div className="link" onClick={toggle}>
               <Link to="/info">Skin Cancer Information</Link>
             </div>
 
-<<<<<<< HEAD
             <div className="link" onClick={toggle}>
               <Link to="/get-tested">Skin Health Questionnaire</Link>
-=======
-            {/* <div className="link" onClick={toggle}>
-              <Link to="/get-tested">Skin Health Questionnaire</Link>
-            </div> */}
-
-            <div className="link" onClick={toggle}>
-              <Link to="/ai-skin-check">AI Skin Check</Link>
->>>>>>> aefe4eb6 (Initial SkinWise project upload)
             </div>
 
             <div className="link" onClick={toggle}>
-              <Link to="/find-a-dermatologist">Find a Dermatologist</Link>
+              <Link to="/ai-skin-check">AI Skin Check</Link>
+            </div>
+
+            <div className="link" onClick={toggle}>
+              <Link to="/find-a-dermatologist">
+                Find a Dermatologist
+              </Link>
             </div>
 
             <div className="link" onClick={toggle}>
@@ -79,7 +79,7 @@ const Navbar = () => {
               }}
             >
               <i className="fas fa-user-circle"></i>
-              <span>{user ? user.name.split(" ")[0] : "User"}</span>
+              <span>{user?.name?.split(" ")[0] || "User"}</span>
             </div>
 
             <div className="link">
@@ -107,7 +107,10 @@ const Navbar = () => {
                   e.currentTarget.style.color = "#ff2e63";
                 }}
               >
-                <i className="fas fa-sign-out-alt" style={{ marginRight: "0.35rem" }}></i>
+                <i
+                  className="fas fa-sign-out-alt"
+                  style={{ marginRight: "0.35rem" }}
+                ></i>
                 Logout
               </button>
             </div>

@@ -372,5 +372,4 @@ Never delay medical consultation based on the application's output.
 <p align="center">
   <strong>SkinWise AI – Promoting Awareness, Encouraging Prevention, and Supporting Better Skin Health.</strong>
 </p>
->>>>>>> aefe4eb6 (Initial SkinWise project upload)
 "# Skinwise" 
