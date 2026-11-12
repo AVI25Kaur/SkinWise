@@ -4,46 +4,71 @@ import { Link, useHistory } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 
 const Navbar = () => {
-  const nav = useRef(null);
-  const navToggle = useRef(null);
-  const navId = useRef(null);
+  const navRef = useRef(null);
+  const navToggleRef = useRef(null);
+  const navIdRef = useRef(null);
 
   const history = useHistory();
   const { isAuthenticated, user, logout } = useAuth();
 
+  // Open and close the mobile navigation menu
   const toggle = () => {
-    navToggle.current?.classList.toggle("expanded");
-    nav.current?.classList.toggle("expanded");
-    navId.current?.classList.toggle("expanded");
+    if (navToggleRef.current) {
+      navToggleRef.current.classList.toggle("expanded");
+    }
+
+    if (navRef.current) {
+      navRef.current.classList.toggle("expanded");
+    }
+
+    if (navIdRef.current) {
+      navIdRef.current.classList.toggle("expanded");
+    }
   };
 
+  // Logout function
   const handleLogout = () => {
     logout();
 
-    if (navToggle.current?.classList.contains("expanded")) {
+    if (
+      navToggleRef.current &&
+      navToggleRef.current.classList.contains("expanded")
+    ) {
       toggle();
     }
 
     history.push("/");
   };
 
+  // Get user's first name
+  const getFirstName = () => {
+    if (user && user.name) {
+      return user.name.split(" ")[0];
+    }
+
+    return "User";
+  };
+
   return (
     <div id="navbar">
+      {/* Logo */}
       <div className="logo">
         <Link to={isAuthenticated ? "/home" : "/"}>
           <h2>SkinWise</h2>
         </Link>
       </div>
 
-      <div className="nav-toggle" ref={nav}>
+      {/* Mobile navigation toggle */}
+      <div className="nav-toggle" ref={navRef}>
         <div
           className="nav-toggle-bar"
-          ref={navToggle}
+          ref={navToggleRef}
           onClick={toggle}
         ></div>
       </div>
 
-      <div id="nav" className="links" ref={navId}>
+      {/* Navigation links */}
+      <div id="nav" className="links" ref={navIdRef}>
         {isAuthenticated ? (
           <>
             <div className="link" onClick={toggle}>
@@ -68,6 +93,7 @@ const Navbar = () => {
               <Link to="/blog">Blog</Link>
             </div>
 
+            {/* User information */}
             <div
               className="link"
               style={{
@@ -79,9 +105,10 @@ const Navbar = () => {
               }}
             >
               <i className="fas fa-user-circle"></i>
-              <span>{user?.name?.split(" ")[0] || "User"}</span>
+              <span>{getFirstName()}</span>
             </div>
 
+            {/* Logout button */}
             <div className="link">
               <button
                 type="button"
