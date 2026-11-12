@@ -158,7 +158,7 @@ const SkinAI = () => {
     <section className="skin-ai-grid">
       <article className="skin-ai-card"><div className="skin-ai-step">01 · IMAGE ANALYSIS</div><h2>Check a skin image</h2><p className="skin-ai-muted">Use a focused image of one spot. Avoid filters, flash glare, and images containing identifying details.</p>
         <label className="skin-ai-upload" htmlFor="lesion-image"><span className="skin-ai-upload-icon">＋</span><strong>{file ? file.name : "Choose a skin image"}</strong><small>JPG, PNG or WEBP · up to 10 MB</small><input id="lesion-image" type="file" accept="image/jpeg,image/png,image/webp" onChange={selectImage}/></label>
-        {preview && <img className="skin-ai-preview" src={preview} alt="Selected skin image preview"/>}
+        {preview && <img className="skin-ai-preview" src={preview} alt="Selected skin lesion preview"/>}
         <button className="skin-ai-button" onClick={analyzeImage} disabled={!file || loading}>{loading ? "Analysing image…" : "Analyse image"}</button>
         {error && <p className="skin-ai-error" role="alert">{error}</p>}
         {result && <div className="skin-ai-result"><span className="skin-ai-result-label">MODEL OUTPUT · NOT A DIAGNOSIS</span><h3>{result.predicted_class_name || result.predicted_class}</h3><p>Model confidence: {Math.round((result.confidence || 0) * 100)}%</p>{Array.isArray(result.top_predictions) && <ul>{result.top_predictions.map((item) => <li key={item.class}><span>{item.class_name || item.class}</span><strong>{Math.round(item.probability * 100)}%</strong></li>)}</ul>}<p className="skin-ai-muted">{result.notice || "Please have a qualified clinician assess any concerning lesion."}</p></div>}

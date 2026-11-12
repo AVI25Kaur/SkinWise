@@ -17,15 +17,17 @@ const Treatment = ({ data }) => {
           </li>
         ))}
       </ul>
-      <a
-        href={data?.treatment?.referLink}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <i class="fas fa-external-link-alt text-secondary external-ref">
-          <span className="text-primary m-1">For more Info</span>
-        </i>
-      </a>
+      {data?.treatment?.referLink && (
+        <a
+          href={data.treatment.referLink}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <i class="fas fa-external-link-alt text-secondary external-ref">
+            <span className="text-primary m-1">For more Info</span>
+          </i>
+        </a>
+      )}
     </div>
   );
 };

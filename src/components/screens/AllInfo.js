@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { data } from "./disease-info/cancer/data";
 import { diseaseData } from "./disease-info/disease/diseaseData";
 
@@ -65,14 +66,14 @@ const AllInfo = () => {
           <div className="cards">
             {tabIndex === 0
               ? skinCancerData?.map((cancer, index) => (
-                  <a href={cancer?.route} className=" my-1 p-1" key={index}>
+                  <Link to={cancer.route} className=" my-1 p-1" key={index}>
                     {cancer?.title}
-                  </a>
+                  </Link>
                 ))
               : skinDiseaseData?.map((disease, index) => (
-                  <a href={disease?.route} className="my-1 p-1" key={index}>
+                  <Link to={disease.route} className="my-1 p-1" key={index}>
                     {disease?.title}
-                  </a>
+                  </Link>
                 ))}
           </div>
         </div>
