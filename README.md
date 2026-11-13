@@ -306,7 +306,7 @@ You can also use the provided Windows launcher:
 run-skinwise.bat
 ```
 
-This starts the Node.js backend and React frontend. The PostgreSQL database must already be configured. Start the ML service separately when using AI Skin Check.
+This starts the ML service, Node.js backend, and React frontend in separate windows. The PostgreSQL database must already be configured. The ML service uses `ml-service\.venv` or `ml-service\venv` when available; otherwise, install its dependencies in your Python environment using [ml-service/README.md](./ml-service/README.md).
 
 ## 🔗 Important Application Routes
 
