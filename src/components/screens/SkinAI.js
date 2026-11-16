@@ -219,59 +219,80 @@ const SkinAI = () => {
     setPreview(URL.createObjectURL(chosen));
   };
 
-  const analyzeImage = async () => {
-    if (!file) {
-      setError("Upload a skin lesion image first.");
-      return;
-    }
+ 
+const analyzeImage = async () => {
+  if (!file) {
+    setError("Upload a skin lesion image first.");
+    return;
+  }
 
-    if (!ML_API_URL) {
-      setError(
-        "The AI service URL is not configured. Please configure REACT_APP_ML_API_URL in your deployment environment."
-      );
-      return;
-    }
+  setLoading(true);
+  setError("");
+  setResult(null);
 
-    setLoading(true);
-    setError("");
-    setResult(null);
+  try {
+    const body = new FormData();
+    body.append("file", file);
+
+    const apiUrl = `${ML_API_URL}/predict`;
+
+    console.log("SkinWise ML API:", apiUrl);
+
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      body: body,
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    const responseText = await response.text();
+
+    let data;
 
     try {
-      const body = new FormData();
-      body.append("file", file);
-
-      const apiUrl = `${ML_API_URL.replace(/\/+$/, "")}/predict`;
-
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        body,
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          data.detail ||
-            "The prediction service could not process this image."
-        );
-      }
-
-      setResult(data);
-    } catch (e) {
-      if (e.name === "TypeError") {
-        setError(
-          "Unable to connect to the AI service. Check that your ML backend is deployed, running, and configured to allow requests from your website."
-        );
-      } else {
-        setError(
-          e.message ||
-            "Something went wrong while analysing the image."
-        );
-      }
-    } finally {
-      setLoading(false);
+      data = JSON.parse(responseText);
+    } catch {
+      throw new Error(
+        `Invalid response from ML service. HTTP ${response.status}`
+      );
     }
-  };
+
+    if (!response.ok) {
+      const detail = Array.isArray(data.detail)
+        ? data.detail.map((item) => item.msg).join(", ")
+        : data.detail;
+
+      throw new Error(
+        detail || `ML service returned HTTP ${response.status}`
+      );
+    }
+
+    if (!data.predicted_class && !data.predicted_class_name) {
+      throw new Error("ML service returned an unexpected prediction format.");
+    }
+
+    console.log("SkinWise prediction:", data);
+
+    setResult(data);
+
+  } catch (e) {
+    console.error("SkinWise ML prediction error:", e);
+
+    if (e.name === "TypeError") {
+      setError(
+        "Unable to reach the ML service. Please check the API URL, backend CORS settings, and browser Network errors."
+      );
+    } else {
+      setError(
+        e.message || "Something went wrong while analysing the image."
+      );
+    }
+
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <main className="skin-ai-page">
