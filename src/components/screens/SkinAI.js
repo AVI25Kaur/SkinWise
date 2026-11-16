@@ -1,17 +1,25 @@
 
+
 import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import "./skin-ai.css";
 
-// Configure the ML service URL through the environment.
-// Local development: http://localhost:8000
-// Production: set REACT_APP_ML_API_URL in Vercel.
+// ==========================================
+// ML API CONFIGURATION
+// ==========================================
+
 const ML_API_URL = (
   process.env.REACT_APP_ML_API_URL ||
   (process.env.NODE_ENV === "development"
     ? "http://localhost:8000"
     : "https://skinwise-detect-ml.onrender.com")
-).trim().replace(/\/+$/, "");
+)
+  .trim()
+  .replace(/\/+$/, "");
+
+// ==========================================
+// SKIN HEALTH QUESTIONNAIRE
+// ==========================================
 
 const questions = [
   {
@@ -61,11 +69,14 @@ const questions = [
   },
   {
     key: "immunosuppressed",
-    title:
-      "Do you have a weakened immune system or take immune-suppressing medicines?",
+    title: "Do you have a weakened immune system or take immune-suppressing medicines?",
     options: [["yes", "Yes"], ["no", "No"], ["unsure", "Not sure"]],
   },
 ];
+
+// ==========================================
+// QUESTIONNAIRE ADVICE
+// ==========================================
 
 const adviceFor = (answers) => {
   const unanswered = questions.filter(
@@ -101,14 +112,15 @@ const adviceFor = (answers) => {
     "evolving",
   ];
 
-  const positiveWarningSigns = positiveAnswers.filter((question) =>
-    warningSigns.includes(question.key)
+  const positiveWarningSigns = positiveAnswers.filter(
+    (question) => warningSigns.includes(question.key)
   );
 
-  const positiveRiskFactors = positiveAnswers.filter((question) =>
-    ["history", "family", "sunburn", "immunosuppressed"].includes(
-      question.key
-    )
+  const positiveRiskFactors = positiveAnswers.filter(
+    (question) =>
+      ["history", "family", "sunburn", "immunosuppressed"].includes(
+        question.key
+      )
   );
 
   if (
@@ -161,6 +173,10 @@ const adviceFor = (answers) => {
   };
 };
 
+// ==========================================
+// MAIN SKIN AI COMPONENT
+// ==========================================
+
 const SkinAI = () => {
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState("");
@@ -175,7 +191,7 @@ const SkinAI = () => {
     [answers]
   );
 
-  // Clean up temporary image preview URLs.
+  // Clean up image preview URLs
   useEffect(() => {
     if (!preview) return undefined;
 
@@ -183,6 +199,10 @@ const SkinAI = () => {
       URL.revokeObjectURL(preview);
     };
   }, [preview]);
+
+  // ==========================================
+  // IMAGE UPLOAD
+  // ==========================================
 
   const selectImage = (event) => {
     const chosen =
@@ -219,84 +239,137 @@ const SkinAI = () => {
     setPreview(URL.createObjectURL(chosen));
   };
 
- 
-const analyzeImage = async () => {
-  if (!file) {
-    setError("Upload a skin lesion image first.");
-    return;
-  }
+  // ==========================================
+  // ML IMAGE ANALYSIS
+  // ==========================================
 
-  setLoading(true);
-  setError("");
-  setResult(null);
+  const analyzeImage = async () => {
+    if (!file) {
+      setError("Upload a skin lesion image first.");
+      return;
+    }
 
-  try {
-    const body = new FormData();
-    body.append("file", file);
+    if (!ML_API_URL) {
+      setError(
+        "ML API URL is missing. Please configure REACT_APP_ML_API_URL in Vercel."
+      );
+      return;
+    }
 
-    const apiUrl = `${ML_API_URL}/predict`;
-
-    console.log("SkinWise ML API:", apiUrl);
-
-    const response = await fetch(apiUrl, {
-      method: "POST",
-      body: body,
-      headers: {
-        Accept: "application/json",
-      },
-    });
-
-    const responseText = await response.text();
-
-    let data;
+    setLoading(true);
+    setError("");
+    setResult(null);
 
     try {
-      data = JSON.parse(responseText);
-    } catch {
-      throw new Error(
-        `Invalid response from ML service. HTTP ${response.status}`
-      );
+      const body = new FormData();
+
+      // IMPORTANT: FastAPI expects the field name "file"
+      body.append("file", file);
+
+      const apiUrl = `${ML_API_URL}/predict`;
+
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+        },
+        body,
+      });
+
+      // Read response safely, even if server returns HTML
+      const rawResponse = await response.text();
+
+      let data;
+
+      try {
+        data = JSON.parse(rawResponse);
+      } catch {
+        throw new Error(
+          `ML service returned an invalid response (HTTP ${response.status}). Check your Render API URL.`
+        );
+      }
+
+      if (!response.ok) {
+        const detail = Array.isArray(data.detail)
+          ? data.detail.map((item) => item.msg).join(", ")
+          : data.detail;
+
+        throw new Error(
+          detail ||
+            `ML prediction failed. HTTP status: ${response.status}`
+        );
+      }
+
+      // Validate prediction response
+      if (!data.predicted_class && !data.predicted_class_name) {
+        throw new Error(
+          "The ML service responded, but no prediction was returned."
+        );
+      }
+
+      setResult(data);
+    } catch (e) {
+      console.error("SkinWise ML prediction error:", e);
+
+      if (
+        e.name === "TypeError" ||
+        /failed to fetch|networkerror|load failed/i.test(
+          e.message || ""
+        )
+      ) {
+        setError(
+          "Unable to reach the ML service. Please check the API URL, backend CORS settings, and browser Network errors."
+        );
+      } else {
+        setError(
+          e.message ||
+            "Something went wrong while analysing the image."
+        );
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ==========================================
+  // QUESTIONNAIRE ANSWER HANDLING
+  // ==========================================
+
+  const handleAnswer = (questionKey, value) => {
+    setAnswers((previous) => ({
+      ...previous,
+      [questionKey]: value,
+    }));
+
+    setShowAssessment(false);
+  };
+
+  const handleQuestionnaireSubmit = (event) => {
+    event.preventDefault();
+
+    const unanswered = questions.filter(
+      (question) => !answers[question.key]
+    );
+
+    if (unanswered.length > 0) {
+      setShowAssessment(true);
+      return;
     }
 
-    if (!response.ok) {
-      const detail = Array.isArray(data.detail)
-        ? data.detail.map((item) => item.msg).join(", ")
-        : data.detail;
+    setShowAssessment(true);
+  };
 
-      throw new Error(
-        detail || `ML service returned HTTP ${response.status}`
-      );
-    }
-
-    if (!data.predicted_class && !data.predicted_class_name) {
-      throw new Error("ML service returned an unexpected prediction format.");
-    }
-
-    console.log("SkinWise prediction:", data);
-
-    setResult(data);
-
-  } catch (e) {
-    console.error("SkinWise ML prediction error:", e);
-
-    if (e.name === "TypeError") {
-      setError(
-        "Unable to reach the ML service. Please check the API URL, backend CORS settings, and browser Network errors."
-      );
-    } else {
-      setError(
-        e.message || "Something went wrong while analysing the image."
-      );
-    }
-
-  } finally {
-    setLoading(false);
-  }
-};
+  // ==========================================
+  // UI
+  // ==========================================
 
   return (
     <main className="skin-ai-page">
+
+      {/* PAGE HEADER */}
+
       <div className="skin-ai-hero">
+
         <span className="skin-ai-kicker">
           SKINWISE · AI LAB
         </span>
@@ -314,11 +387,17 @@ const analyzeImage = async () => {
           decision-support tool, not a diagnosis. It cannot confirm
           or rule out cancer. A clinician must assess concerning lesions.
         </div>
+
       </div>
 
+      {/* MAIN CONTENT */}
+
       <section className="skin-ai-grid">
-        {/* IMAGE ANALYSIS */}
+
+        {/* IMAGE ANALYSIS CARD */}
+
         <article className="skin-ai-card">
+
           <div className="skin-ai-step">
             01 · IMAGE ANALYSIS
           </div>
@@ -330,17 +409,24 @@ const analyzeImage = async () => {
             and images containing identifying details.
           </p>
 
+          {/* IMAGE UPLOAD */}
+
           <label
             className="skin-ai-upload"
             htmlFor="lesion-image"
           >
-            <span className="skin-ai-upload-icon">＋</span>
+
+            <span className="skin-ai-upload-icon">
+              ＋
+            </span>
 
             <strong>
               {file ? file.name : "Choose a skin image"}
             </strong>
 
-            <small>JPG, PNG or WEBP · up to 10 MB</small>
+            <small>
+              JPG, PNG or WEBP · up to 10 MB
+            </small>
 
             <input
               id="lesion-image"
@@ -348,7 +434,10 @@ const analyzeImage = async () => {
               accept="image/jpeg,image/png,image/webp"
               onChange={selectImage}
             />
+
           </label>
+
+          {/* IMAGE PREVIEW */}
 
           {preview && (
             <img
@@ -358,23 +447,35 @@ const analyzeImage = async () => {
             />
           )}
 
+          {/* ANALYSE BUTTON */}
+
           <button
             className="skin-ai-button"
             type="button"
             onClick={analyzeImage}
             disabled={!file || loading}
           >
-            {loading ? "Analysing image…" : "Analyse image"}
+            {loading
+              ? "Analysing image…"
+              : "Analyse image"}
           </button>
 
+          {/* ERROR MESSAGE */}
+
           {error && (
-            <p className="skin-ai-error" role="alert">
+            <p
+              className="skin-ai-error"
+              role="alert"
+            >
               {error}
             </p>
           )}
 
+          {/* ML PREDICTION RESULT */}
+
           {result && (
             <div className="skin-ai-result">
+
               <span className="skin-ai-result-label">
                 MODEL OUTPUT · NOT A DIAGNOSIS
               </span>
@@ -386,20 +487,28 @@ const analyzeImage = async () => {
 
               <p>
                 Model confidence:{" "}
-                {Math.round((result.confidence || 0) * 100)}%
+                {Math.round(
+                  (Number(result.confidence) || 0) * 100
+                )}%
               </p>
+
+              {/* TOP THREE PREDICTIONS */}
 
               {Array.isArray(result.top_predictions) && (
                 <ul>
-                  {result.top_predictions.map((item) => (
-                    <li key={item.class}>
+                  {result.top_predictions.map((item, index) => (
+                    <li key={item.class || index}>
+
                       <span>
                         {item.class_name || item.class}
                       </span>
 
                       <strong>
-                        {Math.round(item.probability * 100)}%
+                        {Math.round(
+                          (Number(item.probability) || 0) * 100
+                        )}%
                       </strong>
+
                     </li>
                   ))}
                 </ul>
@@ -407,10 +516,13 @@ const analyzeImage = async () => {
 
               <p className="skin-ai-muted">
                 {result.notice ||
-                  "Please have a qualified clinician assess any concerning lesion."}
+                  "Experimental research output only. Please consult a qualified clinician for assessment."}
               </p>
+
             </div>
           )}
+
+          {/* SUPPORTED LABELS */}
 
           <p className="skin-ai-footnote">
             Supported model labels (HAM10000): actinic keratoses,
@@ -418,10 +530,13 @@ const analyzeImage = async () => {
             dermatofibroma, melanoma, melanocytic nevi, and vascular
             lesions.
           </p>
+
         </article>
 
-        {/* SMART QUESTIONNAIRE */}
+        {/* SMART QUESTIONNAIRE CARD */}
+
         <article className="skin-ai-card">
+
           <div className="skin-ai-step">
             02 · SMART QUESTIONNAIRE
           </div>
@@ -433,52 +548,60 @@ const analyzeImage = async () => {
             risk factors; it does not calculate a medical diagnosis.
           </p>
 
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              setShowAssessment(true);
-            }}
-          >
-            {questions.map((q, i) => (
+          <form onSubmit={handleQuestionnaireSubmit}>
+
+            {questions.map((question, index) => (
+
               <fieldset
                 className="skin-ai-question"
-                key={q.key}
+                key={question.key}
               >
+
                 <legend>
+
                   <span>
-                    {String(i + 1).padStart(2, "0")}
+                    {String(index + 1).padStart(2, "0")}
                   </span>
-                  {q.title}
+
+                  {question.title}
+
                 </legend>
 
                 <div className="skin-ai-options">
-                  {q.options.map(([value, label]) => (
+
+                  {question.options.map(([value, label]) => (
+
                     <label
                       key={value}
                       className={
-                        answers[q.key] === value
+                        answers[question.key] === value
                           ? "selected"
                           : ""
                       }
                     >
+
                       <input
                         type="radio"
-                        name={q.key}
+                        name={question.key}
                         value={value}
-                        checked={answers[q.key] === value}
+                        checked={
+                          answers[question.key] === value
+                        }
                         onChange={() =>
-                          setAnswers((old) => ({
-                            ...old,
-                            [q.key]: value,
-                          }))
+                          handleAnswer(question.key, value)
                         }
                       />
 
                       {label}
+
                     </label>
+
                   ))}
+
                 </div>
+
               </fieldset>
+
             ))}
 
             <button
@@ -487,45 +610,67 @@ const analyzeImage = async () => {
             >
               Review my answers
             </button>
+
           </form>
+
+          {/* QUESTIONNAIRE RESULT */}
 
           {showAssessment && (
             <div
               className={`skin-ai-advice ${assessment.tone}`}
             >
+
               <span className="skin-ai-result-label">
                 YOUR NEXT STEP
               </span>
 
-              <h3>{assessment.level}</h3>
+              <h3>
+                {assessment.level}
+              </h3>
 
-              <p>{assessment.text}</p>
+              <p>
+                {assessment.text}
+              </p>
 
-              <ul>
-                <li>
-                  Take a clear photo with a date to track changes.
-                </li>
-                <li>
-                  Do not cut, burn, freeze, or apply unverified
-                  remedies to the spot.
-                </li>
-                <li>
-                  Use broad-spectrum SPF 30+ sunscreen,
-                  protective clothing, and shade.
-                </li>
-              </ul>
+              {assessment.answeredCount ===
+                assessment.totalQuestions && (
+                <ul>
+
+                  <li>
+                    Take a clear photo with a date to track changes.
+                  </li>
+
+                  <li>
+                    Do not cut, burn, freeze, or apply unverified
+                    remedies to the spot.
+                  </li>
+
+                  <li>
+                    Use broad-spectrum SPF 30+ sunscreen,
+                    protective clothing, and shade.
+                  </li>
+
+                </ul>
+              )}
 
               <Link to="/find-a-dermatologist">
                 Find a dermatologist →
               </Link>
+
             </div>
           )}
+
         </article>
+
       </section>
 
       {/* SKIN CARE INFORMATION */}
+
       <section className="skin-ai-care">
-        <h2>What about treatment or a cure?</h2>
+
+        <h2>
+          What about treatment or a cure?
+        </h2>
 
         <p>
           There is no safe one-size-fits-all home cure for a suspicious
@@ -534,35 +679,49 @@ const analyzeImage = async () => {
         </p>
 
         <div className="skin-ai-care-grid">
+
           <div>
-            <strong>Get it assessed</strong>
+
+            <strong>
+              Get it assessed
+            </strong>
 
             <p>
               A dermatologist may examine the lesion and, if needed,
               perform a biopsy. Do not delay assessment because of a
               reassuring app result.
             </p>
+
           </div>
 
           <div>
-            <strong>Use clinician-directed treatment</strong>
+
+            <strong>
+              Use clinician-directed treatment
+            </strong>
 
             <p>
               Depending on diagnosis, care may include surgical removal,
               cryotherapy, prescription topical medicines, or other
               specialist treatments. Never self-prescribe these.
             </p>
+
           </div>
 
           <div>
-            <strong>Protect your skin</strong>
+
+            <strong>
+              Protect your skin
+            </strong>
 
             <p>
               Use broad-spectrum SPF 30+, reapply as directed, wear
               protective clothing, avoid tanning beds, and check for
               evolving spots.
             </p>
+
           </div>
+
         </div>
 
         <p className="skin-ai-disclaimer">
@@ -570,7 +729,9 @@ const analyzeImage = async () => {
           ulcerated, or otherwise worrying, arrange prompt medical
           care. If you feel acutely unwell, seek urgent medical help.
         </p>
+
       </section>
+
     </main>
   );
 };
