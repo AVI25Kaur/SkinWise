@@ -76,10 +76,6 @@ const Navbar = () => {
             </div>
 
             <div className="link" onClick={toggle}>
-              <Link to="/get-tested">Skin Health Questionnaire</Link>
-            </div>
-
-            <div className="link" onClick={toggle}>
               <Link to="/ai-skin-check">AI Skin Check</Link>
             </div>
 

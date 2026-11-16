@@ -22,8 +22,8 @@ const Landing = () => {
 
           <p className="landing-hero-desc">
             SkinWise empowers you to take charge of your dermatological health with
-            guided clinical questionnaires,
-            nationwide specialist directories, and authentic patient community stories.
+            AI-powered skin checks, nationwide specialist directories, and authentic
+            patient community stories.
           </p>
 
           <div className="landing-hero-actions">
@@ -66,12 +66,12 @@ const Landing = () => {
           {/* Feature 1 */}
           <div className="landing-feature-card">
             <div className="landing-feature-icon">
-              <i className="fas fa-notes-medical"></i>
+              <i className="fas fa-brain"></i>
             </div>
-            <h3 className="landing-feature-title">Skin Health Questionnaire</h3>
+            <h3 className="landing-feature-title">AI Skin Check</h3>
             <p className="landing-feature-desc">
-              Answer standardized clinical questions about evolving moles, bleeding lesions,
-              and sun sensitivity to understand when a symptom warrants urgent specialist review.
+              Upload a skin image for instant, AI-assisted guidance that helps flag worrying
+              changes and directs you toward the right next step.
             </p>
           </div>
 

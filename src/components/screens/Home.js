@@ -15,19 +15,13 @@ const Home = () => {
 
           <p>
             Take a step towards better skin health.
-            Explore our skin health awareness questionnaire
-            and learn when to seek professional advice.
+            Explore AI skin checks and dermatologist guidance
+            to stay informed about your skin.
           </p>
 
           <div className="btns">
-            <Link to="/get-tested">
-              <div className="btn1">
-                <h3>Start Questionnaire</h3>
-              </div>
-            </Link>
-
             <Link to="/ai-skin-check">
-              <div className="btn2">
+              <div className="btn1">
                 <h3>AI Skin Check</h3>
               </div>
             </Link>
