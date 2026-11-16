@@ -22,7 +22,7 @@ const Landing = () => {
 
           <p className="landing-hero-desc">
             SkinWise empowers you to take charge of your dermatological health with
-            guided clinical questionnaires,
+            one guided skin-health questionnaire inside AI Skin Check,
             nationwide specialist directories, and authentic patient community stories.
           </p>
 
@@ -68,10 +68,10 @@ const Landing = () => {
             <div className="landing-feature-icon">
               <i className="fas fa-notes-medical"></i>
             </div>
-            <h3 className="landing-feature-title">Skin Health Questionnaire</h3>
+            <h3 className="landing-feature-title">AI Skin Check & Questionnaire</h3>
             <p className="landing-feature-desc">
-              Answer standardized clinical questions about evolving moles, bleeding lesions,
-              and sun sensitivity to understand when a symptom warrants urgent specialist review.
+              Review a skin image and answer skin-health questions in one place to learn when a
+              concern may need professional attention. This tool is educational and is not a diagnosis.
             </p>
           </div>
 

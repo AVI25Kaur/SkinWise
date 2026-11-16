@@ -97,8 +97,8 @@ const BlogPost = () => {
             verified dermatologists across your region.
           </p>
           <div className="blog-share-actions">
-            <Link to="/get-tested" className="blog-cta-btn">
-              <i className="fas fa-notes-medical"></i> Take Questionnaire
+            <Link to="/ai-skin-check" className="blog-cta-btn">
+              <i className="fas fa-notes-medical"></i> Open Image Tester
             </Link>
             <Link to="/find-a-dermatologist" className="blog-cta-btn-outline">
               <i className="fas fa-user-md"></i> Find Dermatologists

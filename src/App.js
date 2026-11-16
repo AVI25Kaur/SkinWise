@@ -21,7 +21,6 @@ import DiseaseInfoFrame from "./components/screens/disease-info/disease/DiseaseI
 import AllInfo from "./components/screens/AllInfo";
 
 import FindDermatologist from "./components/screens/findDerma/FindDermatologist";
-import GetTested from "./components/screens/getTesed/GetTested";
 
 import SkinAI from "./components/screens/SkinAI";
 
@@ -50,12 +49,6 @@ function App() {
 
               <ProtectedRoute exact path="/blog" component={Blog} />
               <ProtectedRoute exact path="/blog/:id" component={BlogPost} />
-
-              <ProtectedRoute
-                exact
-                path="/get-tested"
-                component={GetTested}
-              />
 
               <ProtectedRoute
                 exact
