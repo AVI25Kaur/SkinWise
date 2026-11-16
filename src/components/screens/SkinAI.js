@@ -6,11 +6,12 @@ import "./skin-ai.css";
 // Configure the ML service URL through the environment.
 // Local development: http://localhost:8000
 // Production: set REACT_APP_ML_API_URL in Vercel.
-const ML_API_URL =
+const ML_API_URL = (
   process.env.REACT_APP_ML_API_URL ||
   (process.env.NODE_ENV === "development"
     ? "http://localhost:8000"
-    : "");
+    : "https://skinwise-detect-ml.onrender.com")
+).trim().replace(/\/+$/, "");
 
 const questions = [
   {
